@@ -10,6 +10,7 @@ import SettingsPage from "./components/SettingsPage";
 import RewardsPage from "./components/RewardsPage";
 import ClientsPage from "./components/ClientsPage";
 import SupportPage from "./components/SupportPage";
+import DriversPage from "./components/DriversPage";
 
 export default function App() {
   return (
@@ -25,6 +26,7 @@ export default function App() {
         <Route element={<Layout><RewardsPage /></Layout>} path="/rewards" />
         <Route element={<Layout><ClientsPage /></Layout>} path="/clients" />
         <Route element={<Layout><SupportPage /></Layout>} path="/support" />
+        <Route element={<Layout><DriversPage /></Layout>} path="/drivers" />
         <Route element={<Layout><TripsListPage /></Layout>} path="/*" />
       </Routes>
     </BrowserRouter>
