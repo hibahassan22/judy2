@@ -11,6 +11,7 @@ import RewardsPage from "./components/RewardsPage";
 import ClientsPage from "./components/ClientsPage";
 import SupportPage from "./components/SupportPage";
 import DriversPage from "./components/DriversPage";
+import DriverDetailPage from "./components/DriverDetailPage";
 
 export default function App() {
   return (
@@ -27,6 +28,7 @@ export default function App() {
         <Route element={<Layout><ClientsPage /></Layout>} path="/clients" />
         <Route element={<Layout><SupportPage /></Layout>} path="/support" />
         <Route element={<Layout><DriversPage /></Layout>} path="/drivers" />
+        <Route element={<Layout><DriverDetailPage /></Layout>} path="/drivers/:driverId" />
         <Route element={<Layout><TripsListPage /></Layout>} path="/*" />
       </Routes>
     </BrowserRouter>

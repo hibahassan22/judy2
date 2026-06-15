@@ -71,7 +71,7 @@ export default function SupportPage() {
   const [noteText, setNoteText] = useState("");
 
   return (
-    <div className="w-full min-h-screen bg-[#f8f9fa] p-6 font-sans antialiased flex flex-col" dir="rtl">
+    <div className="w-full min-h-screen  p-6 font-sans antialiased flex flex-col" dir="rtl">
       
       {/* العنوان العلوي */}
       <header className="mb-4 text-right">

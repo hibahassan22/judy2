@@ -22,7 +22,7 @@ import {
 import { Link } from 'react-router-dom';
 
 // ==========================================
-// 1. مودال إضافة دفعة جديدة (المودال الأول)
+// 1. مودال إضافة دفعة جديدة
 // ==========================================
 const AddPaymentModal = ({ isOpen, onClose }) => {
     if (!isOpen) return null;
@@ -159,7 +159,7 @@ const AddPaymentModal = ({ isOpen, onClose }) => {
 };
 
 // ==========================================
-// 2. مودال تغيير حالة الرحلة (المودال الثاني الجديد)
+// 2. مودال تغيير حالة الرحلة 
 // ==========================================
 const ChangeStatusModal = ({ isOpen, onClose }) => {
     if (!isOpen) return null;
@@ -202,18 +202,16 @@ const ChangeStatusModal = ({ isOpen, onClose }) => {
                                 <div
                                     key={option.id}
                                     onClick={() => setSelectedStatus(option.id)}
-                                    className={`flex items-center justify-between border rounded-xl p-3 cursor-pointer transition-all ${isSelected ? option.activeClass : 'border-gray-200 hover:bg-gray-50'}`}
+                                    className={`flex items-center border rounded-xl p-3 cursor-pointer transition-all ${isSelected ? option.activeClass : 'border-gray-200 hover:bg-gray-50'}`}
                                 >
-                                    <div className="flex items-center justify-center">
+                                    <div className="flex items-center gap-2.5">
                                         <div className={`w-4 h-4 rounded-full border flex items-center justify-center ${isSelected ? 'border-amber-600' : 'border-gray-300'}`}>
                                             {isSelected && <div className="w-2 h-2 bg-amber-600 rounded-full"></div>}
                                         </div>
-                                    </div>
-                                    <div className="flex items-center gap-2">
+                                        {option.icon}
                                         <span className={`text-xs font-medium ${isSelected ? 'text-gray-800 font-semibold' : 'text-gray-600'}`}>
                                             {option.label}
                                         </span>
-                                        {option.icon}
                                     </div>
                                 </div>
                             );
@@ -243,12 +241,11 @@ const ChangeStatusModal = ({ isOpen, onClose }) => {
 };
 
 // ==========================================
-// 3. مودال تعديل بيانات الرحلة (المودال الثالث الجديد)
+// 3. مودال تعديل بيانات الرحلة
 // ==========================================
 const EditTripModal = ({ isOpen, onClose, tripData, onSave }) => {
     if (!isOpen || !tripData) return null;
 
-    // تعبئة الـ state تلقائياً بالبيانات الحالية للرحلة المستلمة
     const [formData, setFormData] = React.useState({
         price: tripData.price || '',
         from: tripData.from || '',
@@ -266,9 +263,8 @@ const EditTripModal = ({ isOpen, onClose, tripData, onSave }) => {
     };
 
     return (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4 font-sans" dir="rtl">
+        <div className="fixed rounded-xl inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4 font-sans" dir="rtl">
             <div className="w-full max-w-md rounded-2xl bg-white shadow-2xl overflow-hidden flex flex-col max-h-[90vh] animate-in fade-in zoom-in-95 duration-200">
-                {/* الهيدر */}
                 <div className="flex items-center justify-between border-b border-gray-100 p-4">
                     <button onClick={onClose} className="text-gray-400 hover:text-gray-600 transition-colors">
                         <X className="w-5 h-5" />
@@ -277,7 +273,6 @@ const EditTripModal = ({ isOpen, onClose, tripData, onSave }) => {
                     <div className="w-5"></div>
                 </div>
 
-                {/* الفورم */}
                 <form onSubmit={handleSubmit} className="p-5 flex-1 overflow-y-auto space-y-4 text-right">
                     <div className="grid grid-cols-2 gap-3">
                         <div className="flex flex-col gap-1.5">
@@ -375,8 +370,7 @@ const EditTripModal = ({ isOpen, onClose, tripData, onSave }) => {
 const TripsLog = () => {
     const [isPaymentModalOpen, setIsPaymentModalOpen] = useState(false);
     const [isStatusModalOpen, setIsStatusModalOpen] = useState(false);
-    
-    // الأجزاء الجديدة للتحكم بمودال التعديل والرحلة المختارة
+
     const [isEditModalOpen, setIsEditModalOpen] = useState(false);
     const [selectedTrip, setSelectedTrip] = useState(null);
 
@@ -387,58 +381,117 @@ const TripsLog = () => {
         { id: '#38', status: 'موقوفة', statusColor: 'bg-gray-400', subStatus: null, type: 'اشتراك', client: 'سارة احمد', price: '570 ر.س', from: 'حي الملقا', to: 'جامعة الملك سعود', city: 'جدة', driver: 'احمد علي', customerName: 'فاطمة احمد', phone: '0568710388', dateFrom: '19-6-2025', dateTo: '1-7-2025', commission: '200 ر.س', remaining: '300 ر.س' },
     ]);
 
-    // دالة فتح مودال التعديل مع تمرير بيانات الكرت الحالي له
     const handleEditClick = (trip) => {
         setSelectedTrip(trip);
         setIsEditModalOpen(true);
     };
 
-    // دالة حفظ البيانات وتحديثها في الـ State وعكسها على واجهة الكروت مباشرة
     const handleSaveTripDetails = (updatedTrip) => {
         setTrips(prevTrips =>
             prevTrips.map(t => t.id === updatedTrip.id ? updatedTrip : t)
         );
-        console.log('Trip updated successfully:', updatedTrip);
+    };
+
+    const handlePrint = () => {
+        const printContent = trips.map(trip => `
+            <tr>
+                <td style="padding: 12px; border: 1px solid #e5e7eb;">${trip.id}</td>
+                <td style="padding: 12px; border: 1px solid #e5e7eb;">${trip.customerName}</td>
+                <td style="padding: 12px; border: 1px solid #e5e7eb;">${trip.driver}</td>
+                <td style="padding: 12px; border: 1px solid #e5e7eb;">${trip.from} - ${trip.to}</td>
+                <td style="padding: 12px; border: 1px solid #e5e7eb;">${trip.price}</td>
+                <td style="padding: 12px; border: 1px solid #e5e7eb; font-weight: bold;">${trip.status}</td>
+            </tr>
+        `).join('');
+
+        const printWindow = window.open('', '_blank');
+        printWindow.document.write(`
+            <html dir="rtl">
+            <head>
+                <title>طباعة سجل الرحلات</title>
+                <style>
+                    body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; padding: 30px; color: #333; }
+                    .header { text-align: center; margin-bottom: 30px; }
+                    .header h1 { color: #b88121; margin: 0; }
+                    .header p { color: #666; font-size: 14px; }
+                    table { width: 100%; border-collapse: collapse; text-align: right; }
+                    th { background-color: #f9fafb; padding: 12px; border: 1px solid #e5e7eb; color: #4b5563; font-weight: 600; }
+                </style>
+            </head>
+            <body>
+                <div class="header">
+                    <h1>سجل الرحلات</h1>
+                    <p>تقرير مطبوع بجميع تفاصيل الرحلات الحالية</p>
+                </div>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>رقم الرحلة</th>
+                            <th>العميل</th>
+                            <th>السائق</th>
+                            <th>المسار</th>
+                            <th>السعر</th>
+                            <th>الحالة</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        ${printContent}
+                    </tbody>
+                </table>
+                <script>
+                    window.onload = function() {
+                        window.print();
+                    }
+                </script>
+            </body>
+            </html>
+        `);
+        printWindow.document.close();
     };
 
     return (
-        <div className="w-full min-h-screen bg-[#f3f4f6] p-6 font-sans text-right" dir="rtl">
+        <div className="w-full min-h-screen bg-gray-50 p-6 font-sans text-right" dir="rtl">
             {/* عنوان الصفحة وأزرار التحكم */}
-            <div className="flex justify-between items-center mb-4">
+            <div className="flex justify-between items-center mb-5">
                 <div>
-                    <h1 className="text-2xl font-semibold text-yellow-700">سجل الرحلات</h1>
-                    <p className="text-xs text-gray-500 mt-0.5">إدارة ومتابعة الرحلات بجميع تفاصيلها</p>
+                    <h1 className="text-xl font-bold text-[#bd8b2a]">سجل الرحلات</h1>
+                    <p className="text-sm text-gray-500 mt-0.5">إدارة ومتابعة الرحلات بجميع تفاصيلها</p>
                 </div>
 
                 <div className="flex gap-2">
-                    <button className="flex items-center gap-1.5 bg-white px-4 py-1.5 rounded-lg border border-gray-200 text-xs text-gray-600 hover:bg-gray-50">
+                    {/* تم ترتيب الأزرار لتطابق الصورة */}
+                    <button className="flex items-center gap-1.5 bg-white px-3 py-1.5 rounded-lg border border-gray-200 text-xs text-gray-600 hover:bg-gray-50 transition-colors">
+                        <SlidersHorizontal className="w-3.5 h-3.5 text-gray-500" />
+                        تصفية
+                    </button>
+                    <button
+                        onClick={handlePrint}
+                        className="flex items-center gap-1.5 bg-white px-3 py-1.5 rounded-lg border border-gray-200 text-xs text-gray-600 hover:bg-gray-50 transition-colors"
+                    >
                         <Download className="w-3.5 h-3.5 text-gray-500" />
                         تصدير
-                    </button>
-                    <button className="flex items-center gap-1.5 bg-white px-4 py-1.5 rounded-lg border border-gray-200 text-xs text-gray-600 hover:bg-gray-50">
-                        <SlidersHorizontal className="w-3.5 h-3.5 text-gray-600" />
-                        تصفية
                     </button>
                 </div>
             </div>
 
             {/* البانر الإعلاني */}
-            <div className="relative bg-gradient-to-l from-[#b88121] to-[#dca43b] rounded-2xl p-6 mb-6 shadow-sm overflow-hidden min-h-[200px] flex items-center justify-between">
-                <div className="z-10 text-white mr-0 ml-auto pr-12 text-right">
-                    <h2 className="text-4xl font-extrabold flex items-center gap-2 justify-start select-none">
-                        120 <span className="text-2xl font-normal">رحلة</span>
+            {/* البانر الإعلاني */}
+            <div className="relative bg-gradient-to-l from-[#b88121] to-[#dca43b] rounded-xl mb-6 shadow-sm overflow-hidden h-[150px] md:h-[180px] flex items-center">
+
+                {/* النص على اليمين */}
+                <div className="z-10 text-white w-full pr-12 text-right">
+                    <h2 className="text-5xl font-bold flex items-center gap-3">
+                        120 <span className="text-3xl font-medium pt-1">رحلة</span>
                     </h2>
                 </div>
 
-                <div className="absolute left-0 bottom-0 top-0 hidden md:flex items-end justify-start pointer-events-none">
-                    <div className="relative w-full h-full flex items-end justify-start">
-                        <div className="bg-amber-400/10 w-48 h-48 rounded-full absolute left-4 bottom-0 blur-2xl pointer-events-none"></div>
-                        <img
-                            src="path_to_your_image.png"
-                            alt="توصيل ورحلات"
-                            className="h-[90%] w-auto object-contain max-w-full drop-shadow-sm block"
-                        />
-                    </div>
+                {/* حاوية الصورة على اليسار - دي اللي هتجبرها تنزل تحت */}
+                <div className="absolute top-0 bottom-0 left-0 flex items-end justify-start pointer-events-none md:left-4 pl-4 md:pl-0">
+                    <img
+                        src="path_to_your_image.png"
+                        alt="توصيل ورحلات"
+                        className="max-h-[90%] md:max-h-[95%] w-auto object-contain"
+                    />
                 </div>
             </div>
 
@@ -449,7 +502,6 @@ const TripsLog = () => {
 
                     return (
                         <div key={index} className="bg-white rounded-xl shadow-sm border border-gray-100 flex flex-col md:flex-row overflow-hidden">
-                            {/* تفاصيل الكرت الأساسية */}
                             <div className="p-5 flex-1 flex flex-col justify-between gap-4">
                                 <div className="flex flex-wrap justify-between items-center gap-2">
                                     <div className="flex items-center gap-2 flex-wrap">
@@ -516,7 +568,6 @@ const TripsLog = () => {
                                 </div>
                             </div>
 
-                            {/* قسم الإجراءات الجانبي */}
                             <div className="bg-gray-50/50 p-4 border-l border-gray-100 flex flex-col gap-2 justify-center w-full md:w-44 text-center">
                                 <span className="text-xs font-semibold text-gray-400 mb-1 block">الإجراءات</span>
 
@@ -541,8 +592,7 @@ const TripsLog = () => {
                                     <Eye className="w-3.5 h-3.5 text-gray-400" /> تفاصيل
                                 </Link>
 
-                                {/* ربط زر التعديل بالدالة الجديدة لتمرير بيانات الرحلة الحالية */}
-                                <button 
+                                <button
                                     onClick={() => handleEditClick(trip)}
                                     className="flex items-center justify-center gap-1 bg-white border border-gray-300 text-gray-700 text-xs py-1.5 px-3 rounded hover:bg-gray-50 transition-colors"
                                 >
@@ -554,7 +604,7 @@ const TripsLog = () => {
                 })}
             </div>
 
-            {/* أرقام الصفحات (Pagination) */}
+            {/* أرقام الصفحات */}
             <div className="flex justify-center items-center gap-1 mt-8 text-xs text-gray-600" dir="ltr">
                 <button className="p-1.5 bg-white border border-gray-200 rounded hover:bg-gray-50">
                     <ChevronLeft className="w-4 h-4 text-gray-400" />
@@ -569,7 +619,6 @@ const TripsLog = () => {
                 </button>
             </div>
 
-            {/* المودالز المنبثقة */}
             <AddPaymentModal
                 isOpen={isPaymentModalOpen}
                 onClose={() => setIsPaymentModalOpen(false)}
@@ -580,7 +629,6 @@ const TripsLog = () => {
                 onClose={() => setIsStatusModalOpen(false)}
             />
 
-            {/* مودال 3 الجديد: تعديل بيانات الرحلة المستهدفة */}
             <EditTripModal
                 isOpen={isEditModalOpen}
                 tripData={selectedTrip}
